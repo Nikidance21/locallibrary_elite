@@ -13,7 +13,8 @@ urlpatterns = [
 
 urlpatterns += [
     path('mybooks/', views.LoanedBooksByUserListView.as_view(), name='my-borrowed'),
-    path(r'borrowed/', views.LoanedBooksAllListView.as_view(), name='all-borrowed'),  # Added for challenge
+    path(r'borrowed/', views.LoanedBooksAllListView.as_view(), name='all-borrowed'),
+    # Added for challenge
 ]
 
 # Add URLConf to create, update, and delete authors
@@ -24,8 +25,9 @@ urlpatterns += [
 ]
 
 # Add URLConf to create, update, and delete books
-urlpatterns += [
+urlpatterns += {
     path('book/create/', views.BookCreate.as_view(), name='book-create'),
     path('book/<int:pk>/update/', views.BookUpdate.as_view(), name='book-update'),
     path('book/<int:pk>/delete/', views.BookDelete.as_view(), name='book-delete'),
-]
+    path('profile/', views.ProfileMain.as_view(), name='profile'),
+}

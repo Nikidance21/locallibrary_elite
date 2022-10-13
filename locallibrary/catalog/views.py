@@ -1,8 +1,9 @@
+from django.contrib.auth.models import AbstractUser
 from django.shortcuts import render
 
 # Create your views here.
 
-from .models import Book, Author, BookInstance, Genre
+from .models import Book, Author, BookInstance, Genre, Profile
 
 
 def index(request):
@@ -16,7 +17,7 @@ def index(request):
 
     # Number of visits to this view, as counted in the session variable.
     num_visits = request.session.get('num_visits', 1)
-    request.session['num_visits'] = num_visits+1
+    request.session['num_visits'] = num_visits + 1
 
     # Render the HTML template index.html with the data in the context variable.
     return render(
@@ -139,7 +140,7 @@ class AuthorCreate(PermissionRequiredMixin, CreateView):
 
 class AuthorUpdate(PermissionRequiredMixin, UpdateView):
     model = Author
-    fields = '__all__' # Not recommended (potential security issue if more fields added)
+    fields = '__all__'  # Not recommended (potential security issue if more fields added)
     permission_required = 'catalog.can_mark_returned'
 
 
@@ -166,3 +167,18 @@ class BookDelete(PermissionRequiredMixin, DeleteView):
     model = Book
     success_url = reverse_lazy('books')
     permission_required = 'catalog.can_mark_returned'
+
+
+from django.views.generic import ListView, DetailView, TemplateView
+
+
+class ProfileMain(TemplateView):
+    model = AbstractUser
+    context_object_name = 'user'
+    template_name = 'profile.html'
+
+class OrderUserListView(LoginRequiredMixin, generic.ListView):
+    """Generic class-based view listing books on loan to current user."""
+    model = BookInstance
+    template_name = 'catalog/profile.html'
+    paginate_by = 1
